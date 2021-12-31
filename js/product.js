@@ -77,8 +77,9 @@ let productRegistered = (product) => {
         altTxt: product.altTxt,
         description: product.description,
         color: colorIdSelected.value,
-        quantity: quantSelected.value,
-        price: product.price * quantSelected.value,
+        quantity: parseInt(quantSelected.value, 10),
+        price: product.price,
+        totalPrice: product.price * parseInt(quantSelected.value, 10),
       };
       console.log(optionProduct);
 

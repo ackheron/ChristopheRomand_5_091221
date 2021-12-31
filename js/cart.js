@@ -1,6 +1,3 @@
-let tab = [];
-let supprimerSelection;
-
 let basket = JSON.parse(localStorage.getItem("basket"));
 
 for (product of basket) {
@@ -13,12 +10,13 @@ for (product of basket) {
         <div class="cart__item__content">
             <div class="cart__item__content__description">
                 <h2>${product.name}</h2>
-                <p><${product.color}/p>
-                <p id="article__price"> ${product.price}€</p>
+                <p>Couleur du produit: ${product.color}</p>
+                <p>Prix unitaire: ${product.price}€</p>
             </div>
         <div class="cart__item__content__settings">
             <div id="jojo" class="cart__item__content__settings__quantity">
-                <p>Qté : ${product.quantity} </p>
+                <p id="quantité">Qté : ${product.quantity} </p>
+                <p id="sousTotal">Prix total pour cet article: ${product.totalPrice}€</p> 
                 <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
             </div>
             <div class="cart__item__content__settings__delete">
@@ -28,12 +26,14 @@ for (product of basket) {
         </div>
      </article>`;
 }
+console.log("ma quantité");
+console.log(basket[0].quantity);
 
 // Fonction récupération des prix des articles et somme totale
 
 let addPriceFunction = () => {
   console.log(basket);
-  let found = basket.map((element) => element.price);
+  let found = basket.map((element) => element.totalPrice);
   console.log(found);
 
   const reducer = (previousValue, currentValue) => previousValue + currentValue;
@@ -41,61 +41,201 @@ let addPriceFunction = () => {
   console.log(somme);
   return somme;
 };
-// Appel de la fonction addPriceFunction
-let sommeTotale = addPriceFunction();
-console.log(sommeTotale);
-//Injection de la somme totale dans le DOM
-document.querySelector("#totalPrice").textContent = sommeTotale;
 
-console.log(product.quantity);
+// Fonction récupération des quantités des articles et quantité totale
 
-let itemQuantity = document.querySelectorAll(".itemQuantity");
-console.log(itemQuantity[1]);
+let addQuantFunction = () => {
+  console.log(basket);
+  let found2 = basket.map((element) => element.quantity);
+  console.log(found2);
 
-const selectQuantity = document.querySelectorAll(".itemQuantity");
+  const reducer = (previousValue, currentValue) => previousValue + currentValue;
+  let quant = found2.reduce(reducer);
+  console.log(quant);
+  return quant;
+};
 
-let test = document.querySelectorAll("#article__price");
+// Fonction d'injection dans le DOM des donnés addPrice et addQuant
 
-selectQuantity.forEach(function (quantity, i, k) {
+function injectSommeQuant() {
+  // Appel de la fonction addPriceFunction
+  let sommeTotale = addPriceFunction();
+  //Injection de la somme totale dans le DOM
+  document.querySelector("#totalPrice").textContent = sommeTotale;
+  // Appel de la fonction addQuantFunction
+  let quantTotale = addQuantFunction();
+
+  //injection de la quantité des articles dans le DOM
+  document.querySelector("#totalQuantity").textContent = quantTotale;
+}
+injectSommeQuant();
+
+let itemQuantity = Array.from(document.querySelectorAll(".itemQuantity"));
+let sousTotal = Array.from(document.querySelectorAll("#sousTotal"));
+let screenQuantity = Array.from(document.querySelectorAll("#quantité"));
+
+itemQuantity.forEach(function (quantity, i, k) {
   quantity.addEventListener("change", (event) => {
     event.preventDefault();
     let newArticlePrice = quantity.value * basket[i].price;
     console.log(quantity.value);
-    // let test = document.querySelectorAll("#article__price");
-    console.log(test[0]);
-    console.log(test[1]);
-    console.log(test.length);
 
-    // document.querySelector("#article__price").textContent =
-    //   newArticlePrice + " €";
+    screenQuantity[i].textContent = "Qté: " + quantity.value;
+    basket[i].quantity = parseInt(quantity.value, 10);
 
-    // test[quantity].textContent = newArticlePrice;
+    sousTotal[i].textContent =
+      "Prix total pour cet article: " + newArticlePrice + " €";
+    basket[i].totalPrice = newArticlePrice;
 
-    for (k = 0; k < test.length; k++) {
-      test[k].textContent = newArticlePrice;
-    }
     console.log(`le prix de ${basket[i].name} et passé à ${newArticlePrice}`);
+
+    injectSommeQuant();
   });
 });
 
-// SUPPRESSION PRODUIT - VISUEL Et localStorage
-let deleteProduit = () => {
-  supprimerSelection = Array.from(
-    document.querySelectorAll(".supprimerProduit");
-    console.log(supprimerSelection);   
-  );
-  i; // variable SUPPRIMER SELECTION
+/******************************** SUPPRESSION DES ARTICLES****************************/
 
-  for (let i = 0; i < supprimerSelection.length; i++) {
-    supprimerSelection[i].addEventListener("click", () => {
-      supprimerSelection[i].parentElement.style.display = "none";
+let supprimerSelection = Array.from(document.querySelectorAll(".deleteItem"));
+console.log(supprimerSelection);
+let tab = [];
 
-      tab = basket;
-      tab.splice([i], 1);
+// supprimer element
 
-      basket = localStorage.setItem("mon panier", JSON.stringify(tab));
+for (let i = 0; i < supprimerSelection.length; i++) {
+  console.log(supprimerSelection.length);
+  supprimerSelection[i].addEventListener("click", () => {
+    supprimerSelection[i].parentElement.style.display = "none";
 
-      window.location.href = "panier.html";
-    });
+    tab = basket;
+
+    tab.splice([i], 1);
+
+    basket = localStorage.setItem("basket", JSON.stringify(tab));
+
+    window.location.href = "cart.html";
+  });
+}
+
+// LE FORMULAIRE
+
+// sélection du bouton Commander
+
+const btnCommander = document.querySelector("#order");
+console.log(btnCommander);
+
+// addEventListener
+
+btnCommander.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  let formulaireValues = {
+    firstName: document.querySelector("#firstName").value,
+    lastName: document.querySelector("#lastName").value,
+    address: document.querySelector("#address").value,
+    city: document.querySelector("#city").value,
+    email: document.querySelector("#email").value,
+  };
+
+  console.log(formulaireValues);
+
+  /******************************** GESTION DU FORMULAIRE ****************************/
+
+  const regExPrenomNomVille = (value) => {
+    return /^[A-Z][A-Za-z\é\è\ê\-]+$/.test(value);
+  };
+
+  const regExAdresse = (value) => {
+    return /^[a-zA-Z0-9.,-_ ]{5,50}[ ]{0,2}$/.test(value);
+  };
+
+  const regExEmail = (value) => {
+    return /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/.test(
+      value
+    );
+  };
+
+  // Fonctions de contrôle
+  function firstNameControl() {
+    const prenom = formulaireValues.firstName;
+    let inputFirstName = document.querySelector("#firstName");
+    if (regExPrenomNomVille(prenom)) {
+      inputFirstName.style.backgroundColor = "green";
+      return true;
+    } else {
+      inputFirstName.style.backgroundColor = "#FF6F61";
+      return false;
+    }
   }
-};
+  function lastNameControl() {
+    const nom = formulaireValues.lastName;
+    let inputLastName = document.querySelector("#lastName");
+    if (regExPrenomNomVille(nom)) {
+      inputLastName.style.backgroundColor = "green";
+      return true;
+    } else {
+      inputLastName.style.backgroundColor = "#FF6F61";
+      return false;
+    }
+  }
+
+  function addressControl() {
+    const adresse = formulaireValues.address;
+    let inputAddress = document.querySelector("#address");
+    if (regExAdresse(adresse)) {
+      inputAddress.style.backgroundColor = "green";
+      return true;
+    } else {
+      inputAddress.style.backgroundColor = "#FF6F61";
+      return false;
+    }
+  }
+  function cityControl() {
+    const ville = formulaireValues.city;
+    let inputCity = document.querySelector("#city");
+    if (regExPrenomNomVille(ville)) {
+      inputCity.style.backgroundColor = "green";
+      return true;
+    } else {
+      inputCity.style.backgroundColor = "#FF6F61";
+      return false;
+    }
+  }
+  function mailControl() {
+    const courriel = formulaireValues.email;
+    let inputMail = document.querySelector("#email");
+    if (regExEmail(courriel)) {
+      inputMail.style.backgroundColor = "green";
+      return true;
+    } else {
+      inputMail.style.backgroundColor = "#FF6F61";
+      return false;
+    }
+  }
+
+  // Contrôle validité formulaire avant de l'envoyer dans le local storage
+  if (
+    firstNameControl() &&
+    lastNameControl() &&
+    addressControl() &&
+    cityControl() &&
+    mailControl()
+  ) {
+    // Enregistrer le formulaire dans le local storage
+    localStorage.setItem("contact", JSON.stringify(formulaireValues));
+  } else {
+    console.log("Veuillez bien remplir le formulaire");
+  }
+  /********************************FIN GESTION DU FORMULAIRE ****************************/
+});
+
+// Maintenir le contenu du localStorage dans le champs du formulaire
+
+let dataFormulaire = JSON.parse(localStorage.getItem("contact"));
+
+console.log(dataFormulaire);
+
+document.querySelector("#firstName").value = dataFormulaire.firstName;
+document.querySelector("#lastName").value = dataFormulaire.lastName;
+document.querySelector("#address").value = dataFormulaire.address;
+document.querySelector("#city").value = dataFormulaire.city;
+document.querySelector("#email").value = dataFormulaire.email;
