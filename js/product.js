@@ -28,7 +28,6 @@ fetch(`http://localhost:3000/api/products/${productId}`)
 // Fonction qui récupère les données de la promesse .then(product) pour injecter les valeurs dans le fichier Html
 
 let productSelected = (product) => {
-  console.log(product);
   // Injection des données de l'objet sélectionner dans le Html
   document.querySelector("head > title").textContent = product.name;
   document.querySelector(
@@ -41,8 +40,6 @@ let productSelected = (product) => {
   // Sélection de de la balise color-select dans le Html
 
   let colorId = document.querySelector("#colors");
-  console.log(colorId);
-  console.log(product.colors);
 
   // Itération dans le tableau colors de l'objet et insertion des variables dans le Html
 
@@ -52,7 +49,6 @@ let productSelected = (product) => {
     option.value = `${color}`;
 
     colorId.appendChild(option);
-    console.log(option);
   }
 };
 
@@ -83,55 +79,35 @@ let productRegistered = (product) => {
       };
       console.log(optionProduct);
 
-      // Le Local Storage
+      /******************************* Le Local Storage ********************/
 
-      // let localStorageProducts = JSON.parse(localStorage.getItem("basket"));
+      //Variable contenant le local storage
+      let localStorageProducts = JSON.parse(localStorage.getItem("basket"));
 
-      // console.log(localStorageProducts);
-      // if (localStorageProducts == false) {
-      //   localStorageProducts.push(optionProduct);
-
-      //   localStorage.setItem("basket", JSON.stringify(localStorageProducts));
-      //   console.log(localStorageProducts);
-      // } else {
-      //   localStorageProducts = [];
-      //   localStorageProducts.push(optionProduct);
-
-      //   localStorage.setItem("basket", JSON.stringify(localStorageProducts));
-      //   console.log(localStorageProducts);
-      // }
-
-      // let localStorageProducts =
-      //   JSON.parse(localStorage.getItem("products")) || [];
-      let localStorageProducts =
-        JSON.parse(localStorage.getItem("basket")) || [];
-
-      let item = localStorageProducts.find((item) => product.name === "name");
-
-      if (item) {
-        item.quantity += quantity;
-      } else {
+      // Si le local storage existe
+      if (localStorageProducts) {
+        // On rechercher avec la méthode find() si l'id et la couleur d'un article est déjà présent
+        let item = localStorageProducts.find(
+          (item) =>
+            item.id == optionProduct.id && item.color == optionProduct.color
+        );
+        // Si oui on ajoute juste la nouvelle quantité et la mise à jour du prix à l'article
+        if (item) {
+          item.quantity = item.quantity + optionProduct.quantity;
+          item.totalPrice += item.price * optionProduct.quantity;
+          console.log(item.totalPrice);
+          localStorage.setItem("basket", JSON.stringify(localStorageProducts));
+          return;
+        }
+        // Si l'article n'est pas déjà dans le local storage alors on push le nouvel article sélectionner
         localStorageProducts.push(optionProduct);
+        localStorage.setItem("basket", JSON.stringify(localStorageProducts));
+      } else {
+        //  Sinon création d'un tableau dans le lequel on push l'objet "optionProduct"
+        let newTabLocalStorage = [];
+        newTabLocalStorage.push(optionProduct);
+        localStorage.setItem("basket", JSON.stringify(newTabLocalStorage));
       }
-      console.log(item);
-
-      // then put it back.
-      localStorage.setItem("basket", JSON.stringify(localStorageProducts));
-      console.log(localStorageProducts);
-
-      // ------------------test
-      // for (let i = 0; i < localStorageProducts.length; i++) {
-      //   let color = localStorageProducts[i].color;
-      //   let id = localStorageProducts[i].id;
-      //   console.log(color);
-      //   console.log(id);
-
-      //   if (color == product.color && id == product.id) {
-      //     product.id += 10;
-      //   } else {
-      //     localStorageProducts.push(optionProduct);
-      //   }
-      // }
     }
   });
 };
