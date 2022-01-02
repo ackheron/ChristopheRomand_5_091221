@@ -77,6 +77,8 @@ function injectSommeQuant() {
   let sommeTotale = addPriceFunction();
   //Injection de la somme totale dans le DOM
   document.querySelector("#totalPrice").textContent = sommeTotale;
+
+  // basket.push(sommeTotale);
   // Appel de la fonction addQuantFunction
   let quantTotale = addQuantFunction();
 
@@ -239,7 +241,8 @@ btnCommander.addEventListener("click", (event) => {
     mailControl()
   ) {
     // Enregistrer le formulaire dans le local storage
-    // localStorage.setItem("contact", JSON.stringify(contact));
+    localStorage.setItem("contact", JSON.stringify(contact));
+
     sendToServer();
   } else {
     console.log("Veuillez bien remplir le formulaire");
@@ -265,7 +268,7 @@ btnCommander.addEventListener("click", (event) => {
       });
     // SI on a bien obtenu un orderId en réponse on redirige notre utilisateur
     if (orderId != "") {
-      location.href = "confirmation.html?" + orderId;
+      location.href = "confirmation.html?id=" + orderId;
     }
   }
 });
