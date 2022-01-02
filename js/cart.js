@@ -55,6 +55,12 @@ let addQuantFunction = () => {
   return quant;
 };
 
+// Fonction mise à jour du local storage products
+
+let majLocalStorageProducts = () => {
+  localStorage.setItem("basket", JSON.stringify(basket));
+};
+
 // Fonction d'injection dans le DOM des donnés addPrice et addQuant
 
 function injectSommeQuant() {
@@ -67,9 +73,12 @@ function injectSommeQuant() {
 
   //injection de la quantité des articles dans le DOM
   document.querySelector("#totalQuantity").textContent = quantTotale;
+
+  majLocalStorageProducts();
 }
 injectSommeQuant();
 
+console.log(basket);
 let itemQuantity = Array.from(document.querySelectorAll(".itemQuantity"));
 let sousTotal = Array.from(document.querySelectorAll("#sousTotal"));
 let screenQuantity = Array.from(document.querySelectorAll("#quantité"));
@@ -116,7 +125,7 @@ for (let i = 0; i < supprimerSelection.length; i++) {
   });
 }
 
-// LE FORMULAIRE
+/*************************************  LE FORMULAIRE ********************************/
 
 // sélection du bouton Commander
 
