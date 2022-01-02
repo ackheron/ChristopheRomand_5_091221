@@ -1,4 +1,11 @@
+// Variable qui récupère les articles du panier dans le local storage
 let basket = JSON.parse(localStorage.getItem("basket"));
+
+// Variable pour stocker les id de chaque articles présent dans le panier
+let products = [];
+
+// Variable qui récupère l'orderId envoyé par comme réponse par le serveur
+let orderId = "";
 
 for (product of basket) {
   document.querySelector(
@@ -25,9 +32,11 @@ for (product of basket) {
         </div>
         </div>
      </article>`;
+
+  // Récupération des Id de chaque articles et envoi dans le tableau de la variable products[]
+  products.push(product.id);
+  console.log(products);
 }
-console.log("ma quantité");
-console.log(basket[0].quantity);
 
 // Fonction récupération des prix des articles et somme totale
 
@@ -137,7 +146,7 @@ console.log(btnCommander);
 btnCommander.addEventListener("click", (event) => {
   event.preventDefault();
 
-  let formulaireValues = {
+  let contact = {
     firstName: document.querySelector("#firstName").value,
     lastName: document.querySelector("#lastName").value,
     address: document.querySelector("#address").value,
@@ -145,7 +154,7 @@ btnCommander.addEventListener("click", (event) => {
     email: document.querySelector("#email").value,
   };
 
-  console.log(formulaireValues);
+  console.log(contact);
 
   /******************************** GESTION DU FORMULAIRE ****************************/
 
@@ -165,7 +174,7 @@ btnCommander.addEventListener("click", (event) => {
 
   // Fonctions de contrôle
   function firstNameControl() {
-    const prenom = formulaireValues.firstName;
+    const prenom = contact.firstName;
     let inputFirstName = document.querySelector("#firstName");
     if (regExPrenomNomVille(prenom)) {
       inputFirstName.style.backgroundColor = "green";
@@ -176,7 +185,7 @@ btnCommander.addEventListener("click", (event) => {
     }
   }
   function lastNameControl() {
-    const nom = formulaireValues.lastName;
+    const nom = contact.lastName;
     let inputLastName = document.querySelector("#lastName");
     if (regExPrenomNomVille(nom)) {
       inputLastName.style.backgroundColor = "green";
@@ -188,7 +197,7 @@ btnCommander.addEventListener("click", (event) => {
   }
 
   function addressControl() {
-    const adresse = formulaireValues.address;
+    const adresse = contact.address;
     let inputAddress = document.querySelector("#address");
     if (regExAdresse(adresse)) {
       inputAddress.style.backgroundColor = "green";
@@ -199,7 +208,7 @@ btnCommander.addEventListener("click", (event) => {
     }
   }
   function cityControl() {
-    const ville = formulaireValues.city;
+    const ville = contact.city;
     let inputCity = document.querySelector("#city");
     if (regExPrenomNomVille(ville)) {
       inputCity.style.backgroundColor = "green";
@@ -210,7 +219,7 @@ btnCommander.addEventListener("click", (event) => {
     }
   }
   function mailControl() {
-    const courriel = formulaireValues.email;
+    const courriel = contact.email;
     let inputMail = document.querySelector("#email");
     if (regExEmail(courriel)) {
       inputMail.style.backgroundColor = "green";
@@ -230,11 +239,35 @@ btnCommander.addEventListener("click", (event) => {
     mailControl()
   ) {
     // Enregistrer le formulaire dans le local storage
-    localStorage.setItem("contact", JSON.stringify(formulaireValues));
+    // localStorage.setItem("contact", JSON.stringify(contact));
+    sendToServer();
   } else {
     console.log("Veuillez bien remplir le formulaire");
   }
+
   /********************************FIN GESTION DU FORMULAIRE ****************************/
+
+  /*******************************REQUÊTE DU SERVEUR ET POST DES DONNÉES ***************/
+  function sendToServer() {
+    const sendToServer = fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      body: JSON.stringify({ contact, products }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      // Ensuite on stock la réponse de l'api (orderId)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (server) {
+        orderId = server.orderId;
+      });
+    // SI on a bien obtenu un orderId en réponse on redirige notre utilisateur
+    if (orderId != "") {
+      location.href = "confirmation.html?" + orderId;
+    }
+  }
 });
 
 // Maintenir le contenu du localStorage dans le champs du formulaire
