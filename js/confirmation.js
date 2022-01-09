@@ -11,7 +11,7 @@ const idConfirmation = document.querySelector("#orderId");
 
 (function () {
   idConfirmation.textContent = orderId;
-  //   localStorage.clear();
+  localStorage.clear();
 })();
 
 `<div class="confirmation">
