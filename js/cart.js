@@ -4,7 +4,7 @@ let basket = JSON.parse(localStorage.getItem("basket"));
 // Variable pour stocker les id de chaque articles présent dans le panier
 let products = [];
 
-// Variable qui récupère l'orderId envoyé par comme réponse par le serveur
+// Variable qui récupère l'orderId envoyé comme réponse par le serveur lors de la requête POST
 let orderId = "";
 
 for (product of basket) {
@@ -73,13 +73,12 @@ let majLocalStorageProducts = () => {
 // Fonction d'injection dans le DOM des donnés addPrice et addQuant
 
 function injectSommeQuant() {
-  // Appel de la fonction addPriceFunction
+  // Appel de la fonction addPriceFunction qui nous retourne la variable somme
   let sommeTotale = addPriceFunction();
   //Injection de la somme totale dans le DOM
   document.querySelector("#totalPrice").textContent = sommeTotale;
 
-  // basket.push(sommeTotale);
-  // Appel de la fonction addQuantFunction
+  // Appel de la fonction addQuantFunction qui nous retourne la variable quant
   let quantTotale = addQuantFunction();
 
   //injection de la quantité des articles dans le DOM
