@@ -5,18 +5,22 @@ const orderId = getProductId();
 
 const basket = JSON.parse(localStorage.getItem("basket"));
 
+const total = JSON.parse(localStorage.getItem("sommeTotale"));
+
 const idConfirmation = document.querySelector("#orderId");
+
+const btnRetourHtml = `<button id="retourAccueil"><a href="./index.html">Retour à l'accueil</a></button>`;
 
 //Fonction Auto-invoquer pour afficher l'orderId dans le DOM
 
 (function () {
-  idConfirmation.textContent = orderId;
+  idConfirmation.innerHTML = `
+  <p>Commande validée ! <br>Votre numéro de commande est : 
+  <strong>${orderId}</strong>. <br>
+  Le montant de votre commande est de <strong>${total} €</strong>.</p> <br>
+  `;
+
+  idConfirmation.insertAdjacentHTML("beforeend", btnRetourHtml);
+
   localStorage.clear();
 })();
-
-`<div class="confirmation">
-        <p>Commande validée ! <br>Votre numéro de commande est : <span id="orderId">
-            ${orderId}
-          </span></p>
-          <span>Le montant de votre commande est de 
-      </div>`;
