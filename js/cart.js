@@ -156,14 +156,13 @@ deleteProduct();
 
 /*************************************  LE FORMULAIRE ********************************/
 
-// sélection du bouton Commander
+// sélection du bouton Valider
 
-const btnCommander = document.querySelector("#order");
-console.log(btnCommander);
+const btnValidate = document.querySelector("#order");
 
-// addEventListener
+// Écoute du bouton Valider sur le click pour pouvoir contrôler, valider et ennoyer le formulaire et les produits au back-end
 
-btnCommander.addEventListener("click", (event) => {
+btnValidate.addEventListener("click", (event) => {
   event.preventDefault();
 
   let contact = {
@@ -178,14 +177,17 @@ btnCommander.addEventListener("click", (event) => {
 
   /******************************** GESTION DU FORMULAIRE ****************************/
 
+  // Regex pour le contrôle des champs Prénom, Nom et Ville
   const regExPrenomNomVille = (value) => {
     return /^[A-Z][A-Za-z\é\è\ê\-]+$/.test(value);
   };
 
+  // Regex pour le contrôle du champ Adresse
   const regExAdresse = (value) => {
     return /^[a-zA-Z0-9.,-_ ]{5,50}[ ]{0,2}$/.test(value);
   };
 
+  // Regex pour le contrôle du champ Email
   const regExEmail = (value) => {
     return /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/.test(
       value

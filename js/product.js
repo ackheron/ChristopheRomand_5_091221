@@ -65,8 +65,9 @@ let productRegistered = (product) => {
     } else if (quantSelected.value == 0) {
       confirm("Veuillez sélectionner le nombre d'articles souhaités");
     } else {
+      alert("Votre article a bien été ajouté au panier");
+
       // Enregistrement des valeurs dans un objet optionProduct
-      confirm("Votre article a bien été ajouté au panier");
 
       let optionProduct = {
         id: product._id,
