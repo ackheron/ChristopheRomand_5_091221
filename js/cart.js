@@ -7,6 +7,13 @@ let products = [];
 // Variable qui récupère l'orderId envoyé comme réponse par le serveur lors de la requête POST
 let orderId = "";
 
+// Condition de vérification si le panier et vide ou plein et modification texte
+if (basket === null) {
+  document.querySelector("#titrePanier").textContent = "Le panier est vide !";
+} else {
+  document.querySelector("#titrePanier").textContent = "Votre panier";
+}
+
 for (product of basket) {
   document.querySelector(
     "#cart__items"
@@ -95,7 +102,7 @@ let itemQuantity = Array.from(document.querySelectorAll(".itemQuantity"));
 let sousTotal = Array.from(document.querySelectorAll("#sousTotal"));
 let screenQuantity = Array.from(document.querySelectorAll("#quantité"));
 
-itemQuantity.forEach(function (quantity, i, k) {
+itemQuantity.forEach(function (quantity, i) {
   quantity.addEventListener("change", (event) => {
     event.preventDefault();
     let newArticlePrice = quantity.value * basket[i].price;
@@ -117,26 +124,32 @@ itemQuantity.forEach(function (quantity, i, k) {
 /******************************** SUPPRESSION DES ARTICLES****************************/
 
 let supprimerSelection = Array.from(document.querySelectorAll(".deleteItem"));
-console.log(supprimerSelection);
+
 let tab = [];
 
 // supprimer element
+function deleteProduct() {
+  for (let i = 0; i < supprimerSelection.length; i++) {
+    console.log(supprimerSelection.length);
+    supprimerSelection[i].addEventListener("click", () => {
+      supprimerSelection[i].parentElement.style.display = "none";
 
-for (let i = 0; i < supprimerSelection.length; i++) {
-  console.log(supprimerSelection.length);
-  supprimerSelection[i].addEventListener("click", () => {
-    supprimerSelection[i].parentElement.style.display = "none";
+      tab = basket;
 
-    tab = basket;
+      tab.splice([i], 1);
 
-    tab.splice([i], 1);
+      basket = localStorage.setItem("basket", JSON.stringify(tab));
 
-    basket = localStorage.setItem("basket", JSON.stringify(tab));
+      window.location.href = "cart.html";
 
-    window.location.href = "cart.html";
-  });
+      if ((basket = [])) {
+        localStorage.removeItem("basket");
+      }
+    });
+  }
 }
 
+deleteProduct();
 /*************************************  LE FORMULAIRE ********************************/
 
 // sélection du bouton Commander
