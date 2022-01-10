@@ -123,25 +123,33 @@ itemQuantity.forEach(function (quantity, i) {
 
 /******************************** SUPPRESSION DES ARTICLES****************************/
 
+// Récupération de la node list des boutons supprimer et transformation en tableau avec Array.from
 let supprimerSelection = Array.from(document.querySelectorAll(".deleteItem"));
 
-let tab = [];
+// Nouveau tableau pour récupérer le tableau basket existant et contrôler les suppression
+let tabControlDelete = [];
 
-// supprimer element
+// Fonction de suppression des articles
 function deleteProduct() {
   for (let i = 0; i < supprimerSelection.length; i++) {
-    console.log(supprimerSelection.length);
+    // Écoute d'évènements au click sur le tableau des boutons supprimer
     supprimerSelection[i].addEventListener("click", () => {
+      // Suppression de l'article visuellement sur la page
       supprimerSelection[i].parentElement.style.display = "none";
 
-      tab = basket;
+      // Copie du tableau basket dans le tableau tabControlDelete
+      tabControlDelete = basket;
 
-      tab.splice([i], 1);
+      // Array.prototype.splice() supprime un élément à chaque index [i] du tableau écouté
+      tabControlDelete.splice([i], 1);
 
-      basket = localStorage.setItem("basket", JSON.stringify(tab));
+      // Mise à jour du local storage
+      basket = localStorage.setItem("basket", JSON.stringify(tabControlDelete));
 
+      // Rafraîchissement de la page
       window.location.href = "cart.html";
 
+      // Si le tableau basket est vide on efface l'entrée basket du local storage
       if ((basket = [])) {
         localStorage.removeItem("basket");
       }
@@ -150,6 +158,7 @@ function deleteProduct() {
 }
 
 deleteProduct();
+
 /*************************************  LE FORMULAIRE ********************************/
 
 // sélection du bouton Commander
