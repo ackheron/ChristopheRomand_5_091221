@@ -1,4 +1,4 @@
-// Variable contenant l'addresse de l'api
+// Variable contenant l'adresse de l'api
 
 const kanapApi = "http://localhost:3000/api/products";
 
@@ -11,6 +11,7 @@ fetch(kanapApi)
 
   .then((products) => {
     console.log(products);
+    // Boucle For Of qui itère dans les products et les affichent sur la page avec innerHTML
     for (data of products) {
       console.log(data);
       document.getElementById(
@@ -26,7 +27,7 @@ fetch(kanapApi)
          </a>`;
     }
   })
-
+  // Message d'erreur si la requête n'a pas de réponse
   .catch((err) => {
     alert(error);
   });

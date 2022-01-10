@@ -7,8 +7,8 @@ let products = [];
 // Variable qui récupère l'orderId envoyé comme réponse par le serveur lors de la requête POST
 let orderId = "";
 
-// Condition de vérification si le panier et vide ou plein et modification texte
-if (basket === null) {
+// Condition de vérification si le panier existe et ou est vide et modification texte
+if (basket === null || basket.length === 0) {
   document.querySelector("#titrePanier").textContent = "Le panier est vide !";
 } else {
   document.querySelector("#titrePanier").textContent = "Votre panier";
@@ -34,7 +34,7 @@ for (product of basket) {
                 <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
             </div>
             <div class="cart__item__content__settings__delete">
-                <p class="deleteItem">Supprimer</p>
+                <p class="deleteItem"><button>Supprimer</button></p>
             </div>
         </div>
         </div>
@@ -148,11 +148,6 @@ function deleteProduct() {
 
       // Rafraîchissement de la page
       window.location.href = "cart.html";
-
-      // Si le tableau basket est vide on efface l'entrée basket du local storage
-      if ((basket = [])) {
-        localStorage.removeItem("basket");
-      }
     });
   }
 }
@@ -197,7 +192,7 @@ btnCommander.addEventListener("click", (event) => {
     );
   };
 
-  // Fonctions de contrôle
+  // Fonctions de contrôle du champ Prénom:
   function firstNameControl() {
     const prenom = contact.firstName;
     let inputFirstName = document.querySelector("#firstName");
@@ -214,6 +209,8 @@ btnCommander.addEventListener("click", (event) => {
       return false;
     }
   }
+
+  // Fonctions de contrôle du champ Nom:
   function lastNameControl() {
     const nom = contact.lastName;
     let inputLastName = document.querySelector("#lastName");
@@ -231,6 +228,7 @@ btnCommander.addEventListener("click", (event) => {
     }
   }
 
+  // Fonctions de contrôle du champ Adresse:
   function addressControl() {
     const adresse = contact.address;
     let inputAddress = document.querySelector("#address");
@@ -247,6 +245,8 @@ btnCommander.addEventListener("click", (event) => {
       return false;
     }
   }
+
+  // Fonctions de contrôle du champ Ville:
   function cityControl() {
     const ville = contact.city;
     let inputCity = document.querySelector("#city");
@@ -263,6 +263,8 @@ btnCommander.addEventListener("click", (event) => {
       return false;
     }
   }
+
+  // Fonctions de contrôle du champ Email:
   function mailControl() {
     const courriel = contact.email;
     let inputMail = document.querySelector("#email");
@@ -315,13 +317,16 @@ btnCommander.addEventListener("click", (event) => {
       })
       .then(function (server) {
         orderId = server.orderId;
+        console.log(orderId);
       });
-    // SI on a bien obtenu un orderId en réponse on redirige notre utilisateur
+    // Si la variable orderId n'est pas une chaîne vide on redirige notre utilisateur sur la page confirmation avec la variable
     if (orderId != "") {
       location.href = "confirmation.html?id=" + orderId;
     }
   }
 });
+
+/******************************* FIN REQUÊTE DU SERVEUR ET POST DES DONNÉES ***************/
 
 // Maintenir le contenu du localStorage dans le champs du formulaire
 

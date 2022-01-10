@@ -1,6 +1,12 @@
 /**************/
 /*Confirmation*/
 /**************/
+* {
+  text-decoration: none;
+}
+a {
+  color: black;
+}
 .confirmation {
   display: flex;
   flex-direction: column;
