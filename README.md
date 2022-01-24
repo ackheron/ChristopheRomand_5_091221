@@ -4,9 +4,9 @@
 
 ---
 
-### Projet numéro 5 "Construisez un site e-commerce en JavaScriptDynamisez une page web avec des animations CSS"
+### Projet numéro 5 "Construisez un site e-commerce en JavaScript"
 
----
+## ![js](https://www2.skillsoft.com/wp-content/uploads/2018/01/Javascript_badge-277x300.png)
 
 ### Scénario
 
