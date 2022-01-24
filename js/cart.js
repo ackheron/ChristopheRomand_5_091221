@@ -299,7 +299,7 @@ btnValidate.addEventListener("click", (event) => {
       "Articles et formulaire valide\n Passer commande !";
     sendToServer();
   } else {
-    console.log("Veuillez bien remplir le formulaire");
+    error("Veuillez bien remplir le formulaire");
   }
 
   /********************************FIN GESTION DU FORMULAIRE ****************************/
@@ -314,10 +314,10 @@ btnValidate.addEventListener("click", (event) => {
       },
     })
       // Ensuite on stock la réponse de l'api (orderId)
-      .then(function (response) {
+      .then((response) => {
         return response.json();
       })
-      .then(function (server) {
+      .then((server) => {
         orderId = server.orderId;
         console.log(orderId);
       });
